@@ -38,6 +38,7 @@
                         </template>
                     </el-submenu>
                 </template>
+                
                 <template v-else>
                     <el-menu-item :index="item.index" :key="item.index">
                         <i :class="item.icon"></i>
