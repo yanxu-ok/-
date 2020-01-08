@@ -11,13 +11,13 @@ export default new Router({
         },
         {
             path: '/',
-            component: () => import('../components/common/Home.vue'),
+            component: _import_views('Layout/Home.vue'),
             meta: {
-                title: '自述文件'
+                title: '样式外观'
             },
             children: [{
                     path: '/dashboard',
-                    component: () => import('../components/page/Dashboard.vue'),
+                    component: _import_views('Dashboard'),
                     meta: {
                         title: '系统首页'
                     }
@@ -140,7 +140,7 @@ export default new Router({
         },
         {
             path: '/login',
-            component: _import_views('Login.vue'),
+            component: _import_views('Login/index.vue'),
             meta: {
                 title: '登录'
             }
