@@ -31,7 +31,7 @@ export default new Router({
                 },
                 {
                     path: '/table',
-                    component: () => import('../components/page/BaseTable.vue'),
+                    component: _import_views('GamesTable'),
                     meta: {
                         title: '基础表格'
                     }
