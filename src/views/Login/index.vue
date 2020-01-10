@@ -45,6 +45,7 @@ export default {
             console.log(this.param.username, this.param.password);
             Userlogin(this.param.username, this.param.password)
                 .then(res => {
+                    let username =  localStorage.setItem('my_username',this.param.username);
                     this.$router.push('/');
                     this.$message({
                         message: '登陆成功',

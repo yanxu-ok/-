@@ -38,7 +38,7 @@
                         </template>
                     </el-submenu>
                 </template>
-                
+
                 <template v-else>
                     <el-menu-item :index="item.index" :key="item.index">
                         <i :class="item.icon"></i>
@@ -64,13 +64,28 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    index: 'table',
+                    index: 'GamesTable',
                     title: '游戏分类'
                 },
                 {
                     icon: 'el-icon-lx-copy',
-                    index: 'tabs',
-                    title: 'tab选项卡'
+                    index: 'GameDetails',
+                    title: '游戏详情'
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'GameEvaluation',
+                    title: '游戏评测'
+                },
+                {
+                    icon: 'el-icon-lx-global',
+                    index: 'GameStatistics',
+                    title: '游戏统计'
+                },
+                {
+                    icon: 'el-icon-lx-redpacket_fill',
+                    index: 'GamePlayer',
+                    title: '玩家管理'
                 },
                 {
                     icon: 'el-icon-lx-calendar',
@@ -102,11 +117,6 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'icon',
-                    title: '自定义图标'
-                },
-                {
                     icon: 'el-icon-pie-chart',
                     index: 'charts',
                     title: 'schart图表'
@@ -127,11 +137,6 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-global',
-                    index: 'i18n',
-                    title: '国际化功能'
-                },
-                {
                     icon: 'el-icon-lx-warn',
                     index: '7',
                     title: '错误处理',
@@ -145,11 +150,6 @@ export default {
                             title: '404页面'
                         }
                     ]
-                },
-                {
-                    icon: 'el-icon-lx-redpacket_fill',
-                    index: '/donate',
-                    title: '支持作者'
                 }
             ]
         };

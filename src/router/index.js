@@ -23,24 +23,24 @@ export default new Router({
                     }
                 },
                 {
-                    path: '/icon',
-                    component: () => import('../components/page/Icon.vue'),
-                    meta: {
-                        title: '自定义图标'
-                    }
-                },
-                {
-                    path: '/table',
+                    path: '/GamesTable',
                     component: _import_views('GamesTable'),
                     meta: {
-                        title: '基础表格'
+                        title: '游戏分类'
                     }
                 },
                 {
-                    path: '/tabs',
-                    component: () => import('../components/page/Tabs.vue'),
+                    path: '/GameDetails',
+                    component: _import_views('GamesTable/GameDetails'),
                     meta: {
-                        title: 'tab选项卡'
+                        title: '游戏详情'
+                    }
+                },
+                {
+                    path: '/GameEvaluation',
+                    component: _import_views('GameEvaluation'),
+                    meta: {
+                        title: '游戏评测'
                     }
                 },
                 {
@@ -100,10 +100,10 @@ export default new Router({
                 },
                 {
                     // 国际化组件
-                    path: '/i18n',
-                    component: () => import('../components/page/I18n.vue'),
+                    path: '/GameStatistics',
+                    component: _import_views('GameStatistics'),
                     meta: {
-                        title: '国际化'
+                        title: '游戏统计'
                     }
                 },
                 {
@@ -130,10 +130,10 @@ export default new Router({
                     }
                 },
                 {
-                    path: '/donate',
-                    component: () => import('../components/page/Donate.vue'),
+                    path: '/GamePlayer',
+                    component: _import_views('GamePlayer'),
                     meta: {
-                        title: '支持作者'
+                        title: '玩家管理'
                     }
                 }
             ]
