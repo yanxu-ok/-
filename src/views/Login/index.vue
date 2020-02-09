@@ -12,7 +12,7 @@
                     <el-input
                         type="password"
                         placeholder="password"
-                        v-model.number="param.password"
+                        v-model="param.password"
                     >
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
@@ -32,7 +32,7 @@ export default {
         return {
             param: {
                 username: '',
-                password: null
+                password: ''
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],

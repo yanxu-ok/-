@@ -161,7 +161,7 @@ export default {
                         { id: 2, label: '动作' },
                         { id: 3, label: '冒险' },
                         { id: 4, label: '角色扮演' },
-                        { id: 5, label: '体育竞技' },
+                        { id: 5, label: '策略' },
                         { id: 6, label: '竞技类' }
                     ]
                 },

@@ -1,5 +1,13 @@
 <template>
     <div>
+        <!-- 图标 -->
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <i class="el-icon-lx-cascades"></i> 游戏评测
+                </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <gameWrap :gameInfo="gameInfo"></gameWrap>
     </div>
 </template>
