@@ -11,8 +11,8 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import '@/assets/css/icon.css';
 import '_v/Layout/common/directives';
 import 'babel-polyfill';
-// import axios from '_u/request'
-// Vue.prototype.$axios = axios;
+import axios from '_u/request'
+Vue.prototype.axios = axios;
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(ElementUI, {

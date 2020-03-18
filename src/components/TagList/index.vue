@@ -4,7 +4,7 @@
       {{label}}
     </div>
     <div class="tag-list">
-      <div class="tag-item" :class="{'is-active': currentTag === tag.id}" v-for="tag in list" :key="tag.id" @click="handleClick(tag.id)">{{tag.label}}</div>
+      <div class="tag-item" :class="{'is-active': currentTag === tag.id}" v-for="tag in list" :key="tag.id" @click="handleClick(tag,tag.id,label)">{{tag.label}}</div>
     </div>
   </div>
 </template>
@@ -23,12 +23,13 @@ export default {
   },
   data() {
     return {
-      currentTag: this.list[0].id
+      currentTag: 0
     }
   },
   methods: {
-    handleClick(id) {
-      this.currentTag = id
+    handleClick(tag,id,level) {
+      this.currentTag = id;
+      this.$emit('send',tag,level)
     }
   }
 }

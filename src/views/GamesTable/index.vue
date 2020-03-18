@@ -16,11 +16,12 @@
                     :key="index"
                     :label="category.label"
                     :list="category.list"
+                    @send="categoryClick"
                 />
             </div>
             <!-- 表格区域 -->
             <el-table
-                :data="tableData"
+                :data="filterDate"
                 border
                 class="table"
                 ref="multipleTable"
@@ -28,29 +29,14 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="id" label="游戏编号" width="80" align="center"></el-table-column>
-                <el-table-column prop="name" label="游戏名称" align="center"></el-table-column>
-                <el-table-column label="游戏类别" align="center" prop="cat"></el-table-column>
-                <el-table-column prop="address" label="开发公司"></el-table-column>
-                <el-table-column label="上市时间" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="date" label="玩家测评"></el-table-column>
-                <el-table-column prop="date" label="游戏平台"></el-table-column>
-                <el-table-column prop="date" label="游戏模式"></el-table-column>
+                <el-table-column label="图片" align="center" prop="picture"></el-table-column>
+                <el-table-column prop="gameId" label="游戏编号" width="80" align="center"></el-table-column>
+                <el-table-column prop="gameName" label="游戏名称" align="center"></el-table-column>
+                <el-table-column label="游戏类别" align="center" prop="gameCategory"></el-table-column>
+                <el-table-column prop="gameCompany" label="开发公司" align="center"></el-table-column>
+                <el-table-column label="上市时间" align="center" prop="gameDevelopDate"></el-table-column>
+                <el-table-column prop="gamePlatForm" label="游戏平台" align="center"></el-table-column>
+                <el-table-column prop="gameMode" label="游戏模式" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -67,7 +53,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
@@ -76,22 +62,28 @@
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
-            </div>
+            </div>-->
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="游戏名称">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.gameName"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏类别">
-                    <el-input v-model="form.address"></el-input>
+                    <el-input v-model="form.gameCategory"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏平台">
-                    <el-input v-model="form.address"></el-input>
+                    <el-input v-model="form.gamePlatForm"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏模式">
-                    <el-input v-model="form.address"></el-input>
+                    <el-input v-model="form.gameMode"></el-input>
+                </el-form-item>
+                <el-form-item label="开发公司">
+                    <el-input v-model="form.gameCompany"></el-input>
+                </el-form-item>
+                <el-form-item label="上市时间">
+                    <el-input v-model="form.gameDevelopDate"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -104,11 +96,13 @@
 
 <script>
 import tagList from '_c/TagList';
+import { GamesTable } from '@/api/GamesTable';
+import { Category } from '@/api/Category';
 export default {
     components: {
         tagList
     },
-    name: 'basetable',
+    name: 'GamesTable',
     data() {
         return {
             query: {
@@ -117,35 +111,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [
-                {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333,
-                    cat: '动作'
-                },
-                {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333,
-                    cat: '动作'
-                },
-                {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333,
-                    cat: '动作'
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -153,51 +119,68 @@ export default {
             form: {},
             idx: -1,
             id: -1,
-            categorys: [
-                {
-                    label: '游戏类型',
-                    list: [
-                        { id: 1, label: '全部' },
-                        { id: 2, label: '动作' },
-                        { id: 3, label: '冒险' },
-                        { id: 4, label: '角色扮演' },
-                        { id: 5, label: '策略' },
-                        { id: 6, label: '竞技类' }
-                    ]
-                },
-                {
-                    label: '游戏语言',
-                    list: [
-                        { id: 1, label: '全部' },
-                        { id: 2, label: '简体中文' },
-                        { id: 3, label: '繁体中文' },
-                        { id: 4, label: 'English' },
-                        { id: 5, label: '其他' }
-                    ]
-                },
-                {
-                    label: '游戏平台',
-                    list: [
-                        { id: 1, label: '全部' },
-                        { id: 3, label: 'STEAM' },
-                        { id: 4, label: 'EPIC' },
-                        { id: 5, label: 'ORIGIN' },
-                        { id: 6, label: 'WEGAME' }
-                    ]
-                },
-                {
-                    label: '游戏模式',
-                    list: [{ id: 1, label: '全部' }, { id: 2, label: '单人' }, { id: 3, label: '双人' }, { id: 4, label: '多人' }]
-                }
-            ]
+            categorys: [],
+            arr: ['全部', '全部', '全部'] // 这个是类别数组
         };
+    },
+    computed: {
+        //游戏列表条件过滤
+        filterDate() {
+            return this.tableData.filter(item => {
+                //根据三种条件过滤
+                if (this.arr[0] == this.arr[1] && this.arr[1] == this.arr[2]) {
+                    return item;
+                } else {
+                    return item.gameCategory == this.arr[0] || item.gamePlatForm == this.arr[1] || item.gameMode == this.arr[2];
+                }
+            });
+        }
+    },
+    created() {
+        Category()
+            .then(res => {
+                var newCategorys = [];
+                var arr1 = res.slice(0, 5);
+                arr1.unshift({ id: 0, label: '全部' });
+                var arr2 = res.slice(5, 8);
+                arr2.unshift({ id: 0, label: '全部' });
+                var arr3 = res.slice(8, 12);
+                arr3.unshift({ id: 0, label: '全部' });
+                newCategorys.push(
+                    { label: '游戏类型', list: arr1 },
+                    {
+                        label: '游戏模式',
+                        list: arr2
+                    },
+                    {
+                        label: '游戏平台',
+                        list: arr3
+                    }
+                );
+                this.categorys = newCategorys;
+                // console.log(newCategorys);
+            })
+            .catch(err => {
+                console.log('出错');
+            });
+    },
+    mounted() {
+        //表格
+        GamesTable()
+            .then(res => {
+                this.tableData = res;
+            })
+            .catch(err => {
+                console.log('出错');
+            });
     },
     methods: {
         // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-        },
+        // handleSearch() {
+        //     this.$set(this.query, 'pageIndex', 1);
+        // },
         // 删除操作
+
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
@@ -211,6 +194,7 @@ export default {
         },
         // 多选操作
         handleSelectionChange(val) {
+            console.log(val); // 所有的信息
             this.multipleSelection = val;
         },
         delAllSelection() {
@@ -225,6 +209,7 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
+            //row 是行信息
             this.idx = index;
             this.form = row;
             this.editVisible = true;
@@ -235,9 +220,26 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+        // // 分页导航
+        // handlePageChange(val) {
+        //     this.$set(this.query, 'pageIndex', val);
+        // }
+        //点击类别触发的事件
+        categoryClick(tag, level) {
+            switch (level) {
+                case '游戏类型':
+                    //动态的取赋值
+                    this.$set(this.arr, 0, tag.label);
+                    // this.arr[0] = tag.label;
+                    break;
+                case '游戏平台':
+                    this.$set(this.arr, 1, tag.label);
+                    break;
+                case '游戏模式':
+                    this.$set(this.arr, 2, tag.label);
+                    break;
+            }
+            // console.log(this.arr);
         }
     }
 };

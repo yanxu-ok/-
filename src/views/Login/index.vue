@@ -53,7 +53,6 @@ export default {
                         });
                     })
                     .catch(error => {
-                        console.log(error);
                         this.$message.error('用户名或密码错误');
                     });
             }
