@@ -46,13 +46,14 @@ export default {
                 Userlogin(this.param.username, this.param.password)
                     .then(res => {
                         let username = localStorage.setItem('my_username', this.param.username);
-                        this.$router.push('/');
+                        this.$router.push('/dashboard');
                         this.$message({
                             message: '登陆成功',
                             type: 'success'
                         });
                     })
                     .catch(error => {
+                        console.log(error);
                         this.$message.error('用户名或密码错误');
                     });
             }

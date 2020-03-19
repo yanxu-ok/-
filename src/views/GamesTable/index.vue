@@ -29,7 +29,11 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column label="图片" align="center" prop="picture"></el-table-column>
+                <el-table-column label="图片" align="center" prop="picture">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.picture" class="head_pic" />
+                    </template>
+                </el-table-column>
                 <el-table-column prop="gameId" label="游戏编号" width="80" align="center"></el-table-column>
                 <el-table-column prop="gameName" label="游戏名称" align="center"></el-table-column>
                 <el-table-column label="游戏类别" align="center" prop="gameCategory"></el-table-column>
@@ -63,6 +67,9 @@
                     @current-change="handlePageChange"
                 ></el-pagination>
             </div>-->
+            <div class="button_1">
+                <el-button @click="add">添加游戏</el-button>
+            </div>
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
@@ -82,13 +89,36 @@
                 <el-form-item label="开发公司">
                     <el-input v-model="form.gameCompany"></el-input>
                 </el-form-item>
-                <el-form-item label="上市时间">
-                    <el-input v-model="form.gameDevelopDate"></el-input>
-                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="添加" :visible.sync="editVisible1" width="30%">
+            <el-form ref="form" :model="form1" label-width="70px">
+                <el-form-item label="游戏名称">
+                    <el-input v-model="form1.gameName"></el-input>
+                </el-form-item>
+                <el-form-item label="游戏类别">
+                    <el-input v-model="form1.gameCategory"></el-input>
+                </el-form-item>
+                <el-form-item label="游戏平台">
+                    <el-input v-model="form1.gamePlatForm"></el-input>
+                </el-form-item>
+                <el-form-item label="游戏模式">
+                    <el-input v-model="form1.gameMode"></el-input>
+                </el-form-item>
+                <el-form-item label="开发公司">
+                    <el-input v-model="form1.gameCompany"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="活动时间">
+                    <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form1.gameDevelopDate" type="date" placeholder="选择日期"></el-date-picker>
+                </el-form-item>-->
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible1 = false">取 消</el-button>
+                <el-button type="primary" @click="saveEdit1">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -98,6 +128,9 @@
 import tagList from '_c/TagList';
 import { GamesTable } from '@/api/GamesTable';
 import { Category } from '@/api/Category';
+import { GameEdit } from '@/api/GameEdit';
+import { GameAdd } from '@/api/GameAdd';
+import { GameDel } from '@/api/GameDel';
 export default {
     components: {
         tagList
@@ -111,16 +144,36 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [], //表数据
             multipleSelection: [],
             delList: [],
-            editVisible: false,
+            editVisible: false, // 提示框
+            editVisible1: false,
             pageTotal: 0,
-            form: {},
+            form: {}, //表单
+            form1: {},
             idx: -1,
             id: -1,
-            categorys: [],
-            arr: ['全部', '全部', '全部'] // 这个是类别数组
+            categorys: [], //所有类别数组
+            arr: ['全部', '全部', '全部'], // 这个是分类数组
+            subObj: {
+                //修改提交的数据
+                GameId: null,
+                CategoryId: null,
+                GameModeId: null,
+                GamePlatformId: null,
+                GameName: '',
+                GameCompany: ''
+            },
+            subObj2: {
+                // 添加的数据
+                CategoryId: null,
+                GameModeId: null,
+                GamePlatformId: null,
+                GameName: '',
+                GameCompany: ''
+                // GameDevelopDate: ''
+            }
         };
     },
     computed: {
@@ -158,7 +211,6 @@ export default {
                     }
                 );
                 this.categorys = newCategorys;
-                // console.log(newCategorys);
             })
             .catch(err => {
                 console.log('出错');
@@ -166,29 +218,45 @@ export default {
     },
     mounted() {
         //表格
-        GamesTable()
-            .then(res => {
-                this.tableData = res;
-            })
-            .catch(err => {
-                console.log('出错');
-            });
+        this.start();
     },
     methods: {
         // 触发搜索按钮
         // handleSearch() {
         //     this.$set(this.query, 'pageIndex', 1);
         // },
+        //添加操作
+        add() {
+            this.editVisible1 = true;
+        },
+        //表格
+        start() {
+            GamesTable()
+                .then(res => {
+                    this.tableData = res;
+                })
+                .catch(err => {
+                    console.log('出错');
+                });
+        },
         // 删除操作
-
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    console.log(row.gameId);
+                    GameDel(row.gameId)
+                        .then(res => {
+                            if (res == 200) {
+                                this.$message.success('删除成功');
+                                this.start();
+                            } else {
+                                this.$message.error(`删除失败`);
+                            }
+                        })
+                        .catch(e => e);
                 })
                 .catch(() => {});
         },
@@ -217,10 +285,122 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            this.$set(this.tableData, this.idx, this.form); //动态的修改数据
+            this.subObj.GameId = this.form.gameId;
+            this.subObj.GameName = this.form.gameName;
+            this.subObj.GameCompany = this.form.gameCompany;
+            //判断类别的id
+            switch (this.form.gameCategory) {
+                case '竞技':
+                    this.subObj.CategoryId = 5;
+                    break;
+                case '卡牌':
+                    this.subObj.CategoryId = 4;
+                    break;
+                case '角色扮演':
+                    this.subObj.CategoryId = 3;
+                    break;
+                case '冒险':
+                    this.subObj.CategoryId = 2;
+                    break;
+                case '动作':
+                    this.subObj.CategoryId = 1;
+                    break;
+            }
+            //判断平台的
+            switch (this.form.gamePlatForm) {
+                case 'Steam':
+                    this.subObj.GamePlatformId = 1;
+                    break;
+                case 'EPIC':
+                    this.subObj.GamePlatformId = 2;
+                    break;
+                case 'ORIGIN':
+                    this.subObj.GamePlatformId = 3;
+                    break;
+                case 'WEGAME':
+                    this.subObj.GamePlatformId = 4;
+                    break;
+            }
+            //判断模式的
+            switch (this.form.gameMode) {
+                case '单人':
+                    this.subObj.GameModeId = 1;
+                    break;
+                case '双人':
+                    this.subObj.GameModeId = 2;
+                    break;
+                case '多人':
+                    this.subObj.GameModeId = 3;
+                    break;
+            }
+            console.log(this.subObj);
+            GameEdit(this.subObj)
+                .then(res => {
+                    if (res == 200) {
+                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                    }
+                })
+                .catch(e => {});
         },
-        // // 分页导航
+        //添加
+        saveEdit1() {
+            this.editVisible1 = false;
+            this.subObj2.GameName = this.form1.gameName;
+            this.subObj2.GameCompany = this.form1.gameCompany;
+            // this.subObj2.GameDevelopDate = this.form1.gameDevelopDate;
+            switch (this.form1.gameCategory) {
+                case '竞技':
+                    this.subObj2.CategoryId = 5;
+                    break;
+                case '卡牌':
+                    this.subObj2.CategoryId = 4;
+                    break;
+                case '角色扮演':
+                    this.subObj2.CategoryId = 3;
+                    break;
+                case '冒险':
+                    this.subObj2.CategoryId = 2;
+                    break;
+                case '动作':
+                    this.subObj2.CategoryId = 1;
+                    break;
+            }
+            switch (this.form1.gamePlatForm) {
+                case 'Steam':
+                    this.subObj2.GamePlatformId = 1;
+                    break;
+                case 'EPIC':
+                    this.subObj2.GamePlatformId = 2;
+                    break;
+                case 'ORIGIN':
+                    this.subObj2.GamePlatformId = 3;
+                    break;
+                case 'WEGAME':
+                    this.subObj2.GamePlatformId = 4;
+                    break;
+            }
+            switch (this.form1.gameMode) {
+                case '单人':
+                    this.subObj2.GameModeId = 1;
+                    break;
+                case '双人':
+                    this.subObj2.GameModeId = 2;
+                    break;
+                case '多人':
+                    this.subObj2.GameModeId = 3;
+                    break;
+            }
+            GameAdd(this.subObj2).then(res => {
+                if (res == 200) {
+                    this.$message.success(`添加成功`);
+                    this.start();
+                } else {
+                    this.$message.error(`添加失败`);
+                }
+            });
+        },
+        // // 分页导
         // handlePageChange(val) {
         //     this.$set(this.query, 'pageIndex', val);
         // }
@@ -279,5 +459,9 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.button_1 {
+    text-align: right;
+    margin-top: 10px;
 }
 </style>
