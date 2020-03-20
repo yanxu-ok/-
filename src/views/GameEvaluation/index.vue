@@ -13,42 +13,38 @@
 </template>
 <script>
 import gameWrap from '_v/GameEvaluation/Modules/gameWrap';
+import { EvaluationList } from '@/api/Evaluation/EvaluationList';
 export default {
     name: 'GameEvaluation',
     components: {
-        gameWrap,
+        gameWrap
     },
     data() {
         return {
-            gameInfo: [
-                {
-                    id: 1,
-                    title: '英雄联盟',
-                    gameContent: '祖安打招呼方式',
-                    fourScore: [
-                        { id: 1.1, title: '画面', score: 2 },
-                        { id: 1.2, title: '体验', score: 9 },
-                        { id: 1.3, title: '互动', score: 7 },
-                        { id: 1.4, title: '其他', score: 4 }
-                    ],
-                    scoreTotal: 10
-                },
-                {
-                    id: 2,
-                    title: 'qq飞车',
-                    gameContent: 'S车限时赠送',
-                    fourScore: [
-                        { id: 2.1, title: '画面', score: 9 },
-                        { id: 2.2, title: '体验', score: 4 },
-                        { id: 2.3, title: '互动', score: 3 },
-                        { id: 2.4, title: '其他', score: 7 }
-                    ],
-                    scoreTotal: 8
-                }
-            ]
+            gameInfo: []
         };
     },
-    methods: {}
+    created() {
+        this.getList();
+    },
+    methods: {
+        //获取列表
+        getList() {
+            EvaluationList()
+                .then(res => {
+                    res.forEach((item, index) => {
+                        let arr = [];
+                        arr.push({ id: index + 0.1, title: '画面', score: item.evaluationHuamian });
+                        arr.push({ id: index + 0.2, title: '体验', score: item.evaluationTiyan });
+                        arr.push({ id: index + 0.3, title: '互动', score: item.evaluationHudong });
+                        arr.push({ id: index + 0.4, title: '其他', score: item.evaluationQita });
+                        item.fourScore = arr;
+                    });
+                    this.gameInfo = res;
+                })
+                .catch(() => {});
+        }
+    }
 };
 </script>
 <style lang='less' scoped>

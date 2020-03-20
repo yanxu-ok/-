@@ -6,7 +6,7 @@
       <img src="@/assets/img/xingxing1.svg" v-else />
     </div>
     <div class="scoreTotal_text">{{scoreTotal}}分</div>
-    <div class="scoreTotal_text2">(共有36份评测)</div>
+    <div class="scoreTotal_text2">(共有{{count}}份评测)</div>
   </div>
 </template>
 <script>
@@ -15,6 +15,10 @@ export default {
   props: {
     scoreTotal: {
       type: String,
+      required: true
+    },
+    count:{
+      type: Number,
       required: true
     }
   },

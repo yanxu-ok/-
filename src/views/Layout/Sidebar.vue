@@ -78,14 +78,9 @@ export default {
                     title: '游戏评测'
                 },
                 {
-                    icon: 'el-icon-lx-global',
-                    index: 'GameStatistics',
-                    title: '游戏统计'
-                },
-                {
                     icon: 'el-icon-lx-redpacket_fill',
                     index: 'GamePlayer',
-                    title: '玩家管理'
+                    title: '账号管理'
                 },
                 {
                     icon: 'el-icon-lx-calendar',

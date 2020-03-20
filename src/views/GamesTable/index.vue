@@ -126,11 +126,11 @@
 
 <script>
 import tagList from '_c/TagList';
-import { GamesTable } from '@/api/GamesTable';
-import { Category } from '@/api/Category';
-import { GameEdit } from '@/api/GameEdit';
-import { GameAdd } from '@/api/GameAdd';
-import { GameDel } from '@/api/GameDel';
+import { GamesTable } from '@/api/Game/GamesTable';
+import { Category } from '@/api/Game/Category';
+import { GameEdit } from '@/api/Game/GameEdit';
+import { GameAdd } from '@/api/Game/GameAdd';
+import { GameDel } from '@/api/Game/GameDel';
 export default {
     components: {
         tagList

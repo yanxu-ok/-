@@ -16,17 +16,35 @@
                 </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm">登录</el-button>
+                    <el-button type="primary" @click="dialogVisible = true">注册</el-button>
                 </div>
             </el-form>
         </div>
+        <el-dialog title="添加账号" :visible.sync="dialogVisible" width="30%">
+            <el-form ref="form" :model="form" label-width="70px">
+                <el-form-item label="用户名">
+                    <el-input v-model="form.loginUser"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="form.loginPwd"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { Userlogin } from '@/api/login';
+import { Userlogin } from '@/api/User/login';
+import { UserAdd } from '@/api/User/UserAdd';
 export default {
     data: function() {
         return {
+            form: {},
+            dialogVisible: false,
             param: {
                 username: '',
                 password: ''
@@ -39,7 +57,6 @@ export default {
     },
     methods: {
         submitForm() {
-            console.log(this.param.username, this.param.password);
             if (this.param.username == '' || this.param.password == '') {
                 this.$message.error('用户名或密码不能为空');
             } else {
@@ -57,6 +74,18 @@ export default {
                         this.$message.error('用户名或密码错误');
                     });
             }
+        },
+        //添加用户
+        saveAdd() {
+            this.dialogVisible = false;
+            UserAdd(this.form).then(res => {
+                if (res == 200) {
+                    this.$message.success('注册成功');
+                    this.param.username = this.form.loginUser;
+                } else {
+                    this.$message.error('注册失败');
+                }
+            });
         }
     }
 };
@@ -93,9 +122,10 @@ export default {
 }
 .login-btn {
     text-align: center;
+    display: flex;
 }
 .login-btn button {
-    width: 100%;
+    width: 50%;
     height: 36px;
     margin-bottom: 10px;
 }
