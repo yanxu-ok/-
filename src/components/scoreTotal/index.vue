@@ -19,7 +19,7 @@ export default {
     },
     count:{
       type: Number,
-      required: true
+      required: false
     }
   },
   data() {

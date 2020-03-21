@@ -18,15 +18,20 @@
                     </div>
                     <!-- 综合评测 -->
                     <scoreTotal :scoreTotal="item.average+''" :count="item.count"></scoreTotal>
-                    <input type="button" value="发表评测" />
+                    <input
+                        type="button"
+                        value="发表评测"
+                        v-if="isAdmin != 1"
+                        @click="clickChange(item.gameId)"
+                    />
                 </div>
 
                 <hr />
                 <!-- 中间内容 -->
-                <div class="center_content">
+                <!-- <div class="center_content">
           <img src="@/assets/img/20.png" />
           <span>{{item.gameContent}}</span>
-                </div>
+                </div>-->
                 <!-- 评分 -->
                 <div class="score">
                     <div class="score_ing" v-for="(i, value) in item.fourScore" :key="value">
@@ -49,16 +54,22 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            isAdmin: null
+        };
+    },
     components: {
         scoreTotal,
         score
     },
-    mounted() {
-        // setTimeout(() => {
-        //   console.log(this.gameInfo);
-        // }, 2000);
+    created() {
+        this.isAdmin = localStorage.getItem('isAdmin');
     },
     methods: {
+        clickChange(gameId) {
+            this.$emit('clickChange', gameId);
+        }
     }
 };
 </script>
@@ -141,6 +152,7 @@ hr {
 .score {
     display: flex;
     flex-wrap: wrap;
+    margin-top: 20px;
     .score_ing {
         display: flex;
         align-items: center;

@@ -40,9 +40,9 @@
                 </template>
 
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="item.index" :key="item.index" v-if="isAdmin != item.id">
                         <i :class="item.icon"></i>
-                        <span slot="title">{{ item.title }}</span>
+                        <span slot="title" >{{ item.title }}</span>
                     </el-menu-item>
                 </template>
             </template>
@@ -58,95 +58,31 @@ export default {
             collapse: false,
             items: [
                 {
+                    id:0,
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
                     title: '系统首页'
                 },
                 {
+                    id:0,
                     icon: 'el-icon-lx-cascades',
                     index: 'GamesTable',
                     title: '游戏分类'
                 },
                 {
-                    icon: 'el-icon-lx-copy',
-                    index: 'GameDetails',
-                    title: '游戏详情'
-                },
-                {
+                    id:0,
                     icon: 'el-icon-lx-emoji',
                     index: 'GameEvaluation',
                     title: '游戏评测'
                 },
                 {
+                    id:1,
                     icon: 'el-icon-lx-redpacket_fill',
                     index: 'GamePlayer',
                     title: '账号管理'
-                },
-                {
-                    icon: 'el-icon-lx-calendar',
-                    index: '3',
-                    title: '表单相关',
-                    subs: [
-                        {
-                            index: 'form',
-                            title: '基本表单'
-                        },
-                        {
-                            index: '3-2',
-                            title: '三级菜单',
-                            subs: [
-                                {
-                                    index: 'editor',
-                                    title: '富文本编辑器'
-                                },
-                                {
-                                    index: 'markdown',
-                                    title: 'markdown编辑器'
-                                }
-                            ]
-                        },
-                        {
-                            index: 'upload',
-                            title: '文件上传'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-pie-chart',
-                    index: 'charts',
-                    title: 'schart图表'
-                },
-                {
-                    icon: 'el-icon-rank',
-                    index: '6',
-                    title: '拖拽组件',
-                    subs: [
-                        {
-                            index: 'drag',
-                            title: '拖拽列表'
-                        },
-                        {
-                            index: 'dialog',
-                            title: '拖拽弹框'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-lx-warn',
-                    index: '7',
-                    title: '错误处理',
-                    subs: [
-                        {
-                            index: 'permission',
-                            title: '权限测试'
-                        },
-                        {
-                            index: '404',
-                            title: '404页面'
-                        }
-                    ]
                 }
-            ]
+            ],
+            isAdmin:null
         };
     },
     computed: {
@@ -160,6 +96,7 @@ export default {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+        this.isAdmin = localStorage.getItem('isAdmin');
     }
 };
 </script>

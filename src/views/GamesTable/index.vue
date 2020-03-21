@@ -132,6 +132,16 @@ import { GameEdit } from '@/api/Game/GameEdit';
 import { GameAdd } from '@/api/Game/GameAdd';
 import { GameDel } from '@/api/Game/GameDel';
 export default {
+    filters: {
+        formFilter(val) {
+            let reGep = /[竞技动作冒险角色扮演卡牌]{2,4}/;
+            if (reGep.test(val)) {
+                console.log(111);
+            } else {
+                console.log(222);
+            }
+        }
+    },
     components: {
         tagList
     },
@@ -334,7 +344,6 @@ export default {
                     this.subObj.GameModeId = 3;
                     break;
             }
-            console.log(this.subObj);
             GameEdit(this.subObj)
                 .then(res => {
                     if (res == 200) {

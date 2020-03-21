@@ -62,7 +62,8 @@ export default {
             } else {
                 Userlogin(this.param.username, this.param.password)
                     .then(res => {
-                        let username = localStorage.setItem('my_username', this.param.username);
+                        localStorage.setItem('my_username', this.param.username);
+                        localStorage.setItem('isAdmin', res);
                         this.$router.push('/dashboard');
                         this.$message({
                             message: '登陆成功',
