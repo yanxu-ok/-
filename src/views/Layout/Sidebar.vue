@@ -40,9 +40,13 @@
                 </template>
 
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index" v-if="isAdmin != item.id">
+                    <el-menu-item
+                        :index="item.index"
+                        :key="item.index"
+                        v-if="isAdmin == 1 || item.id != 1"
+                    >
                         <i :class="item.icon"></i>
-                        <span slot="title" >{{ item.title }}</span>
+                        <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
                 </template>
             </template>
@@ -58,31 +62,31 @@ export default {
             collapse: false,
             items: [
                 {
-                    id:0,
+                    id: 0,
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
                     title: '系统首页'
                 },
                 {
-                    id:0,
+                    id: 0,
                     icon: 'el-icon-lx-cascades',
                     index: 'GamesTable',
                     title: '游戏分类'
                 },
                 {
-                    id:0,
+                    id: 0,
                     icon: 'el-icon-lx-emoji',
                     index: 'GameEvaluation',
                     title: '游戏评测'
                 },
                 {
-                    id:1,
+                    id: 1,
                     icon: 'el-icon-lx-redpacket_fill',
                     index: 'GamePlayer',
                     title: '账号管理'
                 }
             ],
-            isAdmin:null
+            isAdmin: null
         };
     },
     computed: {

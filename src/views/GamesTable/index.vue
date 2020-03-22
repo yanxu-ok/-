@@ -68,7 +68,7 @@
                 ></el-pagination>
             </div>-->
             <div class="button_1">
-                <el-button @click="add">添加游戏</el-button>
+                <el-button @click="add" v-if="isAdmin == 1">添加游戏</el-button>
             </div>
         </div>
         <!-- 编辑弹出框 -->
@@ -148,6 +148,7 @@ export default {
     name: 'GamesTable',
     data() {
         return {
+            isAdmin: localStorage.getItem('isAdmin'),
             query: {
                 address: '',
                 name: '',
@@ -251,24 +252,32 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    console.log(row.gameId);
-                    GameDel(row.gameId)
-                        .then(res => {
-                            if (res == 200) {
-                                this.$message.success('删除成功');
-                                this.start();
-                            } else {
-                                this.$message.error(`删除失败`);
-                            }
-                        })
-                        .catch(e => e);
+            if (this.isAdmin == 1) {
+                // 二次确认删除
+                this.$confirm('确定要删除吗？', '提示', {
+                    type: 'warning'
                 })
-                .catch(() => {});
+                    .then(() => {
+                        console.log(row.gameId);
+                        GameDel(row.gameId)
+                            .then(res => {
+                                if (res == 200) {
+                                    this.$message.success('删除成功');
+                                    this.start();
+                                } else {
+                                    this.$message.error(`删除失败`);
+                                }
+                            })
+                            .catch(e => e);
+                    })
+                    .catch(() => {});
+            } else {
+                this.$notify({
+                    title: '警告',
+                    message: '只有管理员可以删除！',
+                    type: 'warning'
+                });
+            }
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -287,10 +296,18 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            //row 是行信息
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
+            if (this.isAdmin == 1) {
+                //row 是行信息
+                this.idx = index;
+                this.form = row;
+                this.editVisible = true;
+            } else {
+                this.$notify({
+                    title: '警告',
+                    message: '只有管理员可以修改！',
+                    type: 'warning'
+                });
+            }
         },
         // 保存编辑
         saveEdit() {
@@ -429,7 +446,8 @@ export default {
                     break;
             }
             // console.log(this.arr);
-        }
+        },
+        open2() {}
     }
 };
 </script>

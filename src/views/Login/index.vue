@@ -57,13 +57,21 @@ export default {
     },
     methods: {
         submitForm() {
+            let date = new Date();
+            let year = date.getFullYear();
+            //月
+            let month = date.getMonth() + 1;
+            //日
+            let day = date.getDate();
+            let rq = year + '-' + month + '-' + day;
             if (this.param.username == '' || this.param.password == '') {
                 this.$message.error('用户名或密码不能为空');
             } else {
-                Userlogin(this.param.username, this.param.password)
+                Userlogin(this.param.username, this.param.password, rq)
                     .then(res => {
                         localStorage.setItem('my_username', this.param.username);
-                        localStorage.setItem('isAdmin', res);
+                        localStorage.setItem('isAdmin', res.isAdmin);
+                        localStorage.setItem('userId', res.userId);
                         this.$router.push('/dashboard');
                         this.$message({
                             message: '登陆成功',
