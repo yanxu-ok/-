@@ -29,18 +29,13 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column label="图片" align="center" prop="picture">
-                    <template slot-scope="scope">
-                        <img :src="scope.row.picture" class="head_pic" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="gameId" label="游戏编号" width="80" align="center"></el-table-column>
                 <el-table-column prop="gameName" label="游戏名称" align="center"></el-table-column>
                 <el-table-column label="游戏类别" align="center" prop="gameCategory"></el-table-column>
                 <el-table-column prop="gameCompany" label="开发公司" align="center"></el-table-column>
                 <el-table-column label="上市时间" align="center" prop="gameDevelopDate"></el-table-column>
                 <el-table-column prop="gamePlatForm" label="游戏平台" align="center"></el-table-column>
                 <el-table-column prop="gameMode" label="游戏模式" align="center"></el-table-column>
+                <el-table-column prop="gameInfo" label="游戏简介" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -89,6 +84,9 @@
                 <el-form-item label="开发公司">
                     <el-input v-model="form.gameCompany"></el-input>
                 </el-form-item>
+                <el-form-item label="游戏简介">
+                    <el-input v-model="form.gameInfo"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -111,6 +109,9 @@
                 </el-form-item>
                 <el-form-item label="开发公司">
                     <el-input v-model="form1.gameCompany"></el-input>
+                </el-form-item>
+                <el-form-item label="游戏简介">
+                    <el-input v-model="form1.gameInfo"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="活动时间">
                     <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form1.gameDevelopDate" type="date" placeholder="选择日期"></el-date-picker>
@@ -174,7 +175,8 @@ export default {
                 GameModeId: null,
                 GamePlatformId: null,
                 GameName: '',
-                GameCompany: ''
+                GameCompany: '',
+                GameInfo: ''
             },
             subObj2: {
                 // 添加的数据
@@ -182,8 +184,9 @@ export default {
                 GameModeId: null,
                 GamePlatformId: null,
                 GameName: '',
-                GameCompany: ''
-                // GameDevelopDate: ''
+                GameCompany: '',
+                // GameDevelopDate: null,
+                GameInfo: ''
             }
         };
     },
@@ -316,6 +319,7 @@ export default {
             this.subObj.GameId = this.form.gameId;
             this.subObj.GameName = this.form.gameName;
             this.subObj.GameCompany = this.form.gameCompany;
+            this.subObj.GameInfo = this.form.gameInfo;
             //判断类别的id
             switch (this.form.gameCategory) {
                 case '竞技':
@@ -337,28 +341,28 @@ export default {
             //判断平台的
             switch (this.form.gamePlatForm) {
                 case 'Steam':
-                    this.subObj.GamePlatformId = 1;
+                    this.subObj.PlatformId = 1;
                     break;
                 case 'EPIC':
-                    this.subObj.GamePlatformId = 2;
+                    this.subObj.PlatformId = 2;
                     break;
                 case 'ORIGIN':
-                    this.subObj.GamePlatformId = 3;
+                    this.subObj.PlatformId = 3;
                     break;
                 case 'WEGAME':
-                    this.subObj.GamePlatformId = 4;
+                    this.subObj.PlatformId = 4;
                     break;
             }
             //判断模式的
             switch (this.form.gameMode) {
                 case '单人':
-                    this.subObj.GameModeId = 1;
+                    this.subObj.ModeId = 1;
                     break;
                 case '双人':
-                    this.subObj.GameModeId = 2;
+                    this.subObj.ModeId = 2;
                     break;
                 case '多人':
-                    this.subObj.GameModeId = 3;
+                    this.subObj.ModeId = 3;
                     break;
             }
             GameEdit(this.subObj)
@@ -371,9 +375,18 @@ export default {
         },
         //添加
         saveEdit1() {
+            let date = new Date();
+            let year = date.getFullYear();
+            //月
+            let month = date.getMonth() + 1;
+            //日
+            let day = date.getDate();
+            let rq = year + '-' + month + '-' + day;
             this.editVisible1 = false;
             this.subObj2.GameName = this.form1.gameName;
             this.subObj2.GameCompany = this.form1.gameCompany;
+            this.subObj2.GameInfo = this.form1.gameInfo;
+            // this.subObj2.GameDevelopDate = rq;
             // this.subObj2.GameDevelopDate = this.form1.gameDevelopDate;
             switch (this.form1.gameCategory) {
                 case '竞技':
@@ -394,27 +407,27 @@ export default {
             }
             switch (this.form1.gamePlatForm) {
                 case 'Steam':
-                    this.subObj2.GamePlatformId = 1;
+                    this.subObj2.PlatformId = 1;
                     break;
                 case 'EPIC':
-                    this.subObj2.GamePlatformId = 2;
+                    this.subObj2.PlatformId = 2;
                     break;
                 case 'ORIGIN':
-                    this.subObj2.GamePlatformId = 3;
+                    this.subObj2.PlatformId = 3;
                     break;
                 case 'WEGAME':
-                    this.subObj2.GamePlatformId = 4;
+                    this.subObj2.PlatformId = 4;
                     break;
             }
             switch (this.form1.gameMode) {
                 case '单人':
-                    this.subObj2.GameModeId = 1;
+                    this.subObj2.ModeId = 1;
                     break;
                 case '双人':
-                    this.subObj2.GameModeId = 2;
+                    this.subObj2.ModeId = 2;
                     break;
                 case '多人':
-                    this.subObj2.GameModeId = 3;
+                    this.subObj2.ModeId = 3;
                     break;
             }
             GameAdd(this.subObj2).then(res => {
@@ -446,8 +459,7 @@ export default {
                     break;
             }
             // console.log(this.arr);
-        },
-        open2() {}
+        }
     }
 };
 </script>

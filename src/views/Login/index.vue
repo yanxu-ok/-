@@ -1,7 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">虎图后台管理系统</div>
+            <div class="ms-title">游戏后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="username">
@@ -20,7 +20,7 @@
                 </div>
             </el-form>
         </div>
-        <el-dialog title="添加账号" :visible.sync="dialogVisible" width="30%">
+        <el-dialog title="注册账号" :visible.sync="dialogVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.loginUser"></el-input>

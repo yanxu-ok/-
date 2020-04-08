@@ -2,11 +2,10 @@
     <div>
         <el-row :gutter="20">
             <el-col :span="8">
-                <el-card shadow="hover" class="mgb20" style="height:252px;">
+                <el-card shadow="hover" class="mgb20" style="height:150px;">
                     <div class="user-info">
-                        <img src="@/assets/img/img.jpg" class="user-avator" alt />
                         <div class="user-info-cont">
-                            <div class="user-info-name">{{name}}</div>
+                            <div>{{name}}</div>
                             <div>{{role}}</div>
                         </div>
                     </div>
@@ -97,7 +96,7 @@ export default {
         this.getList();
         this.getCount();
         OldDate(this.userId).then(res => {
-            console.log(res)
+            // console.log(res)
             this.oldDate = res.dateTime;
         });
     },

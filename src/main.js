@@ -27,7 +27,6 @@ const i18n = new VueI18n({
 // 使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | vue-manage-system`;
-    console.log(to)
     if (to.path === '/login') {
         next();
     } else {

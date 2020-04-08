@@ -83,7 +83,7 @@ export default {
                     id: 1,
                     icon: 'el-icon-lx-redpacket_fill',
                     index: 'GamePlayer',
-                    title: '账号管理'
+                    title: '用户管理'
                 }
             ],
             isAdmin: null
