@@ -88,8 +88,10 @@ export default {
             return this.tagsList.length > 0;
         }
     },
-    watch: {
+    watch: { //监听路由变化，然后添加一个标签
         $route(newValue, oldValue) {
+            console.log(this.$router)
+            console.log(newValue,oldValue)
             this.setTags(newValue);
         }
     },

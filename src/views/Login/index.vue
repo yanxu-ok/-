@@ -74,7 +74,7 @@ export default {
                         localStorage.setItem('userId', res.userId);
                         this.$router.push('/dashboard');
                         this.$message({
-                            message: '登陆成功',
+                            message: '登录成功',
                             type: 'success'
                         });
                     })
